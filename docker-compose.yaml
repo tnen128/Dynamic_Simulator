@@ -1,0 +1,14 @@
+services:
+  airflow-webserver:
+    image: apache/airflow:2.6.3
+    container_name: airflow_webserver
+    ports:
+      - "8080:8080"
+    environment:
+      AIRFLOW__CORE__EXECUTOR: LocalExecutor
+      AIRFLOW__CORE__LOAD_EXAMPLES: "false"
+      AIRFLOW__DATABASE__SQL_ALCHEMY_CONN: sqlite:////opt/airflow/airflow.db
+    volumes:
+      - ./airflow_project:/opt/airflow  # Airflow project directory
+      - ./django_project:/django_project  # Django project directory
+    entrypoint: bash -c "pip install -r /opt/airflow/requirements.txt && airflow db init && airflow webserver"
